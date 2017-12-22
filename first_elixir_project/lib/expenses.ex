@@ -25,7 +25,7 @@ defmodule Expenses do
   end
 
   defp find_tax([_ | tail]) do
-    
+    find_tax(tail)
   end
 
   defp find_tax([]) do
