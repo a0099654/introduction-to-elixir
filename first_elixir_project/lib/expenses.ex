@@ -7,12 +7,12 @@ defmodule Expenses do
     url = "localhost:3000/taxes"
     case HTTPoison.get(url) do
       {:ok, response} -> parse(response) |> calculate(amount)
-      {:error, _} -> "Error fetching tax rates"
+      {:error, _}  -> "Error fetching tax rates"
     end
   end
 
-  defp parse(%{status_code: 200, body:   }) do
-    
+  defp parse(%{status_code: 200, body: json_response }) do
+    Poison.Parser.parser(json_response)
   end
 
   defp calculate({:ok, rates}, amount) do
@@ -20,7 +20,7 @@ defmodule Expenses do
     amount + (amount * tax_rate)
   end
 
-  defp find_tax([%{  } | _ ]) do
+  defp find_tax([%{"state" => "FL", "rate" => rate} | _ ]) do
     rate
   end
 
